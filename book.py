@@ -9,7 +9,7 @@ class Book:
         self.year = year
         self.didRead = didRead
     
-    def __str__(self):
+    def toString(self):
         return (f"Title: {self.title}, Author: {self.author}, Year: {self.year}, Read: {self.didRead}\n")
     
     def getTitle(self):

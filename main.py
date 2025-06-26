@@ -4,51 +4,94 @@
 
 from book import Book
 from libraryManager import LibraryManager
+from datetime import datetime
+
+#Requests for the year the book was made
+def requestYear():
+    #Ensures that the input is a valid integer (not a float, String, etc)
+    while True:
+        bookYear = input("Enter the year the book was made: ")
+        try:
+            num = int(bookYear)
+            
+            #Ensures that input for book year is valid from 0-2025 (current year)
+            if num<0 or num>datetime.now().year:
+                print(f"Please enter a number between 0 and {datetime.now().year}\n")
+            else:
+                break
+        except (ValueError, TypeError):
+            print("Not valid book year\n")
+    
+    return num
+
+#Requests if the user has read the book
+def requestHasRead():
+    didRead = input("Have you (read/unread) before?: ")
+    didRead = didRead.lower()
+    
+    #Runs while the user does not specifiy whether they have read the book or not
+    while(didRead!="read" and didRead!="unread"):
+        didRead = input("Have you read before?: ")
+        didRead = didRead.lower()
+    
+    #Determines whether they have read the book or not
+    read = False
+    if(didRead == "read"):
+        read = True
+        
+    return read
+
+def requestUserChoice():
+    #Ensures that the input is a valid integer (not a float, String, etc)
+    while True:
+        userChoice = input("\nChoose an option: ")
+        try:
+            num = int(userChoice)
+            
+            #Ensures that input for book year is valid from 0-2025 (current year)
+            if num<1 or num>10:
+                print("Please enter a year between 1 and 10\n")
+            else:
+                break
+        except (ValueError, TypeError):
+            print("Not valid book year\n")
+    
+    return num
+    
+def libraryMenu():
+    print("1. Add a new book")
+    print("2. Remove a book")
+    print("3. View all books")
+    print("4. Sort books by year & title")
+    print("5. Mark book read")
+    print("6. Mark book unread")
+    print("7. Search by Title")
+    print("8. Save Library")
+    print("9. Load Library")
+    print("10. Exit")
 
 def main():
-    print("Welcome to Your Personal Library\n")
-    
+    print("\nWelcome to Your Personal Library\n")
+    userLibrary = LibraryManager()
+
     #Runs while the user decides not to exit (option 8)
     while True:
-        print("1. Add a new book")
-        print("2. Remove a book")
-        print("3. View all books")
-        print("4. Sort books by title & year")
-        print("5. Search by Title")
-        print("6. Save Library")
-        print("7. Load Library")
-        print("8. Exit")
+        libraryMenu()
+        userChoice = requestUserChoice()
         
-        userChoice = input("Choose an option: ")
-        curChoice = int(userChoice)
-        
-        #Runs while the user inputs terrible input
-        while curChoice<1 or curChoice>7:
-            userChoice = input("Choose an option: ")
-        
-        #Quits the loop early if the user wants to exit
-        if curChoice==7:
-            print("Thank you, come again!")
+        #Quits early if the user decides to Exit
+        if userChoice==10:
+            print("Goodbye!")
             break
         
         #Acts accordingly based on the user's choice
-        userLibrary = LibraryManager()
-        if curChoice==1:
-            bookTitle = input("Enter the title of the book: ")
+        if userChoice==1:
+            bookTitle = input("Enter the title of the book: ").strip()
             bookAuthor = input("Enter the author of the book: ")
-            bookYear = input("Enter the year the book was made: ")
-            year = int(bookYear)
+            bookYear = requestYear()
+            hasRead = requestHasRead()
             
-            hasRead = input("Have you read before?: ")
-            hasRead = hasRead.tolower()
-            
-            #Runs while the user does not specifiy whether they have read the book or not
-            while(hasRead!="true" or hasRead!="false"):
-                hasRead = input("Have you read before?: ")
-                hasRead = hasRead.tolower()
-            
-            read = bool(hasRead)
-            userBook = Book(bookTitle, bookAuthor, year, read)
+            userBook = Book(bookTitle, bookAuthor, bookYear , hasRead)
             userLibrary.addBook(userBook)
         elif userChoice==2:
             toRem = input("Enter the book title to remove: ")
@@ -56,12 +99,19 @@ def main():
         elif userChoice==3:
             userLibrary.displayAll()
         elif userChoice==4:
+            userLibrary.sortBooks()
+        elif userChoice==5:
             targetBook = input("Enter the book title to mark read: ")
             userLibrary.markBookRead(targetBook)
-        elif userChoice==5:
-            targetBook = input("Enter the book title to find: ")
-            userLibrary.findBook(targetBook)
+            print("\n")
         elif userChoice==6:
+            targetBook = input("Enter the book title to mark unread: ")
+            userLibrary.markBookUnread(targetBook)
+            print("\n")
+        elif userChoice==7:
+            targetBook = input("Enter the book title to find: ")
+            print(userLibrary.findBook(targetBook))
+        elif userChoice==8:
             userLibrary.saveLibrary()
         else:
             userLibrary.loadLibrary()
