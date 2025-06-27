@@ -10,13 +10,19 @@ class Book:
         self.didRead = didRead
     
     def toString(self):
-        return (f"Title: {self.title}, Author: {self.author}, Year: {self.year}, Read: {self.didRead}\n")
+        return f"Title: {self.title}, Author: {self.author}, Year: {self.year}, Read: {self.didRead}\n"
     
     def getTitle(self):
         return self.title
     
+    def getAuthor(self):
+        return self.author
+    
     def getYear(self):
         return self.year
+    
+    def getRead(self):
+        return self.didRead
     
     #Marks the book read
     def markRead(self):
