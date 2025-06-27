@@ -35,6 +35,11 @@ class LibraryManager:
         else:
             print(f"{titleToRem} not found in library\n")
     
+    #Remove all books in library
+    def removeAllBooks(self):
+        self.books.clear()
+        print("Succesfully removed all books!\n")
+    
     #Sorts the books in the library by year and title
     def sortBooks(self):
         self.books.sort(key=lambda book: (-book.getYear(), book.getTitle()))
@@ -53,7 +58,7 @@ class LibraryManager:
         for book in self.books:
             if(book.getTitle()==targetTitle):
                 book.markRead()
-                print(f"Successfully marked {targetTitle} read!\n")
+                print(f"Successfully marked {targetTitle} read!")
                 return
         
         print(f"{targetTitle} not found\n")
@@ -64,7 +69,7 @@ class LibraryManager:
         for book in self.books:
             if(book.getTitle()==targetTitle):
                 book.markUnread()
-                print(f"Successfully marked {targetTitle} unread!\n")
+                print(f"Successfully marked {targetTitle} unread!")
                 return
         
         print(f"{targetTitle} not found\n")
@@ -74,9 +79,10 @@ class LibraryManager:
     def saveLibrary(self):
         with open("library.txt", "w") as file:
             for book in self.books:
-                file.write(str(book.toString()))
-            
-            print("Successfully saved your Library into a file!\n")
+                line = f"{book.getTitle()},{book.getAuthor()},{book.getYear()}, {book.getRead()}\n"
+                file.write(line)
+        
+        print("Successfully saved your Library into a file!\n")
     
     #Loads a text file storing several books' information
     def loadLibrary(self):
@@ -84,17 +90,32 @@ class LibraryManager:
         try:
             with open("library.txt", "r") as file:
                 for line in file:
+                    #Determines if the file is empty
+                    content = file.read().strip()
+                    if content=="":
+                        print("library.txt is empty, nothing to load.\n")
+                        return
+                    
                     parts = line.strip().split(",")
                     if len(parts)==4:
                         title, author, year, didRead = parts
-                        self.books.append(Book(title, author, int(year), didRead))
-
-            print("Successfully Loaded a Library!\n")
+                        book = Book(title, author, int(year), didRead=="True")
+                        self.books.append(book)
+                        
+            print("Successfully Loaded a Library!")
         except FileNotFoundError:
             print("library.txt not found")
             self.books = []
         except Exception as e:
-            print("Something went wrong")
+            print(f"Something went wrong [{e}]")
             self.books = []
             
         self.sortBooks()
+        
+    #Clear the data(s) of current text file
+    def clearLibrary(self):
+        self.books=[]
+        with open("library.txt","w") as file:
+            file.write("")
+            
+        print("library.txt has been cleared!\n")
