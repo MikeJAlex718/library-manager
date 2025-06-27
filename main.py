@@ -48,13 +48,13 @@ def requestUserChoice():
         try:
             num = int(userChoice)
             
-            #Ensures that input for book year is valid from 0-2025 (current year)
-            if num<1 or num>10:
-                print("Please enter a year between 1 and 10\n")
+            #Ensures that input for the user choice is between 1-12
+            if num<1 or num>12:
+                print("Please enter a year between 1 and 12\n")
             else:
                 break
         except (ValueError, TypeError):
-            print("Not valid book year\n")
+            print("Not valid number\n")
     
     return num
     
@@ -68,7 +68,9 @@ def libraryMenu():
     print("7. Search by Title")
     print("8. Save Library")
     print("9. Load Library")
-    print("10. Exit")
+    print("10. Clear Text File")
+    print("11. Remove all Books")
+    print("12. Exit")
 
 def main():
     print("\nWelcome to Your Personal Library\n")
@@ -80,14 +82,14 @@ def main():
         userChoice = requestUserChoice()
         
         #Quits early if the user decides to Exit
-        if userChoice==10:
+        if userChoice==12:
             print("Goodbye!")
             break
         
         #Acts accordingly based on the user's choice
         if userChoice==1:
             bookTitle = input("Enter the title of the book: ").strip()
-            bookAuthor = input("Enter the author of the book: ")
+            bookAuthor = input("Enter the author of the book: ").strip()
             bookYear = requestYear()
             hasRead = requestHasRead()
             
@@ -112,9 +114,14 @@ def main():
             targetBook = input("Enter the book title to find: ")
             print(userLibrary.findBook(targetBook))
         elif userChoice==8:
+            print(f"Saving {len(userLibrary.books)} book(s)")
             userLibrary.saveLibrary()
-        else:
+        elif userChoice==9:
             userLibrary.loadLibrary()
+        elif userChoice==10:
+            userLibrary.clearLibrary()
+        else:
+            userLibrary.removeAllBooks()      
         
 if __name__ == "__main__":
-    main() 
+    main()
